@@ -4,6 +4,102 @@ html {
   font-family: sans-serif;
 }
 
+@media (max-width:991px) and (min-width:768px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2f10"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2f0d"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2eb1"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd24"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd1f"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd1c"] {
+      display: none;
+      opacity: 0;
+  }
+}
+
+@media (max-width:767px) and (min-width:480px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2f10"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2f0d"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2eb1"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd24"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd1f"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd1c"] {
+      display: none;
+      opacity: 0;
+  }
+}
+
+@media (max-width:479px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2f10"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2f0d"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="465cef94-6356-ccd6-9b61-649ffb5a2eb1"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd24"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd1f"] {
+      display: none;
+      opacity: 0;
+  }
+
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="fb622ad5-d900-e69d-6441-0e9f7a13fd1c"] {
+      display: none;
+      opacity: 0;
+  }
+}
+
 body {
   margin: 0;
 }
