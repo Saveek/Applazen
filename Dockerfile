@@ -13,4 +13,4 @@ COPY . .
 # Expose port 5000 for the Flask application
 EXPOSE 2118
 # Start the Flask development server
-CMD ["python", "manage.py", "2118"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:2118"]
