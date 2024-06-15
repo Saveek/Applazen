@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import uuid
+import os
 from django.shortcuts import redirect, render
 
 from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
@@ -14,26 +16,27 @@ def handle_uploaded_file(f):
     return file_path
 
 def generate_chart(chart_type, data):
-    unique_filename = str(uuid.uuid4()) + '.png'
-    file_path = os.path.join('static', unique_filename)
-
-    if chart_type == 'line':
-        plt.figure(figsize=(10, 6))
-        data.plot(kind='line')
-    elif chart_type == 'bar':
-        plt.figure(figsize=(10, 6))
-        data.plot(kind='bar')
-    elif chart_type == 'scatter':
-        plt.figure(figsize=(10, 6))
-        data.plot(kind='scatter', x=data.columns[0], y=data.columns[1])
-    elif chart_type == 'pie':
-        plt.figure(figsize=(10, 6))
-        data.plot(kind='pie', y=data.columns[0])
-
-    plt.savefig(file_path)
-    plt.close()
+    file_path = handle_uploaded_file(data)
+    df = pd.read_csv(file_path)
     
-    return file_path
+    chart_path = os.path.join('charts', f'{uuid.uuid4()}.png')  # Use a different file path with a supported image format
+    
+    plt.figure(figsize=(10, 6))
+    
+    if chart_type == 'line':
+        df.plot(kind='line')
+    elif chart_type == 'bar':
+        df.plot(kind='bar')
+    elif chart_type == 'scatter':
+        df.plot(kind='scatter', x=df.columns[0], y=df.columns[1])
+    elif chart_type == 'pie':
+        df.plot(kind='pie', y=df.columns[0])
+    else:
+        raise ValueError("Invalid chart type")
+    
+    plt.savefig(chart_path)
+    plt.close()
+    return chart_path
 
 def HomePage(request):
     return render(request, "index.html")
@@ -43,13 +46,10 @@ def ChatPage(request):
     if request.method == 'POST':
         form = DataAnalysisForm(request.POST, request.FILES)
         if form.is_valid():
-            data = form.cleaned_data['data']  # Assuming data is in a format suitable for plotting
-            chart_path = generate_chart(chart_type, data)
-            handle_uploaded_file(data)
             chart_type = form.cleaned_data['chart_type']
-            data = pd.read_csv('uploaded_file.csv')
-            generate_chart(chart_type, data)
-            return render(request, 'chat.html', {'form': form, 'chart': 'chart.png'})
+            data = form.cleaned_data['file'] 
+            chart_path = generate_chart(chart_type, data)
+            return render(request, 'chat.html', {'form': form, 'chart_path': chart_path})
     else:
         form = DataAnalysisForm()
     return render(request, 'chat.html', {'form': form})
