@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-je#uqxlb85bktg)x9t)9+=k%#&9jwca4=)09fm%=ned^8kg0hw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['squealing-board-plausible-crowd-production.pipeops.app']
 
 
 # Application definition
