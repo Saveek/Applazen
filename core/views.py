@@ -8,7 +8,8 @@ from django.shortcuts import redirect, render
 
 from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
 
-# Define base directories for uploads and charts
+openai.api_key = settings.OPENAI_API_KEY
+
 UPLOAD_DIR = os.path.join(settings.STATIC_ROOT, 'uploaded_files')
 CHART_DIR = os.path.join(settings.STATIC_ROOT, 'charts')
 
@@ -26,11 +27,10 @@ def handle_uploaded_file(f):
     
     return file_path, unique_filename
 
-def generate_chart(chart_type, data):
-    file_path, unique_filename = handle_uploaded_file(data)
+def generate_chart(chart_type, file_path):
     df = pd.read_csv(file_path)
     
-    chart_filename = f'{unique_filename.split(".")[0]}.png'  # Use the same filename but with a different extension
+    chart_filename = f'{os.path.basename(file_path).split(".")[0]}.png'  # Use the same filename but with a different extension
     chart_path = os.path.join(CHART_DIR, chart_filename)
     
     # Ensure the chart directory exists
@@ -51,7 +51,8 @@ def generate_chart(chart_type, data):
         raise ValueError("Invalid chart type")
     
     plt.savefig(chart_path)
-    plt.close()    
+    plt.close()
+    
     return chart_path
 
 def ChatPage(request):
@@ -77,6 +78,7 @@ def ChatPage(request):
                 })
             
             if uploaded_file:
+                file_path, unique_filename = handle_uploaded_file(uploaded_file)
                 chart_path = generate_chart(chart_type, file_path)
                 chart_url = os.path.join(settings.STATIC_URL, 'charts', os.path.basename(chart_path))
                 responses.append({
