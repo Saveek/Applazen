@@ -18,7 +18,9 @@ class AnalysisPromptForm(forms.Form):
   prompt = forms.CharField(widget=forms.Textarea)
       
 class DataAnalysisForm(forms.Form):
-    file = forms.FileField(label='Upload CSV File')
-    chart_type = forms.ChoiceField(choices=CHART_CHOICES, label='Select Chart Type')
+    file = forms.FileField(label='Upload CSV File', required=False)
+    chart_type = forms.ChoiceField(choices=CHART_CHOICES, label='Select Chart Type', required=False)
+    prompt = forms.CharField(widget=forms.Textarea, label='Your Prompt', required=False)
+
 
 

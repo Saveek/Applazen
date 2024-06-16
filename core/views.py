@@ -1,6 +1,6 @@
 import os
 import uuid
-
+import openai
 import matplotlib.pyplot as plt
 import pandas as pd
 from django.conf import settings
@@ -67,14 +67,16 @@ def ChatPage(request):
             uploaded_file = request.FILES.get('file')
             
             if prompt:
-                response = openai.Completion.create(
-                    engine="text-davinci-003",
-                    prompt=prompt,
-                    max_tokens=150
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": prompt}
+                    ]
                 )
                 responses.append({
                     'prompt': prompt,
-                    'response': response.choices[0].text.strip()
+                    'response': response['choices'][0]['message']['content']
                 })
             
             if uploaded_file:
@@ -89,7 +91,6 @@ def ChatPage(request):
         form = DataAnalysisForm()
     
     return render(request, 'chat.html', {'form': form, 'responses': responses, 'chart_path': chart_path})
-
 
 def HomePage(request):
     return render(request, "index.html")
