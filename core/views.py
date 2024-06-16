@@ -9,8 +9,8 @@ from django.shortcuts import redirect, render
 from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
 
 # Define base directories for uploads and charts
-UPLOAD_DIR = os.path.join(settings.BASE_DIR, 'uploaded_files')
-CHART_DIR = os.path.join(settings.BASE_DIR, 'charts')
+UPLOAD_DIR = os.path.join(settings.STATIC_ROOT, 'uploaded_files')
+CHART_DIR = os.path.join(settings.STATIC_ROOT, 'charts')
 
 def handle_uploaded_file(f):
     unique_filename = str(uuid.uuid4()) + '.csv'
@@ -51,10 +51,7 @@ def generate_chart(chart_type, data):
         raise ValueError("Invalid chart type")
     
     plt.savefig(chart_path)
-    plt.close()
-    
-    print(f"Chart saved at: {chart_path}")
-    
+    plt.close()    
     return chart_path
 
 def ChatPage(request):
@@ -64,7 +61,8 @@ def ChatPage(request):
             chart_type = form.cleaned_data['chart_type']
             data = form.cleaned_data['file'] 
             chart_path = generate_chart(chart_type, data)
-            chart_url = f'/charts/{os.path.basename(chart_path)}'
+            chart_url = f'charts/{os.path.basename(chart_path)}'
+            chart_url = os.path.join(settings.STATIC_URL, 'charts', os.path.basename(chart_path))
             return render(request, 'chat.html', {'form': form, 'chart_path': chart_url})
     else:
         form = DataAnalysisForm()
@@ -73,8 +71,6 @@ def ChatPage(request):
 
 def HomePage(request):
     return render(request, "index.html")
-
-
 
 def AboutView(request):
     return render(request, "about.html")
