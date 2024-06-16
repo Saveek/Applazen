@@ -1,26 +1,34 @@
+import os
+import uuid
+
 import matplotlib.pyplot as plt
 import pandas as pd
-import uuid
-import os
 from django.shortcuts import redirect, render
 
 from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
 
+# Define base directories for uploads and charts
+UPLOAD_DIR = os.path.join(settings.BASE_DIR, 'uploaded_files')
+CHART_DIR = os.path.join(settings.BASE_DIR, 'charts')
 
 def handle_uploaded_file(f):
     unique_filename = str(uuid.uuid4()) + '.csv'
-    file_path = os.path.join('uploaded_files', unique_filename)  # Make sure the uploaded_files directory exists
+    file_path = os.path.join('uploaded_files', unique_filename)
     with open(file_path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
-    return file_path
+    return file_path, unique_filename
 
 def generate_chart(chart_type, data):
-    file_path = handle_uploaded_file(data)
+    file_path, unique_filename = handle_uploaded_file(data)
     df = pd.read_csv(file_path)
     
-    chart_path = os.path.join('charts', f'{uuid.uuid4()}.png')  # Use a different file path with a supported image format
-    
+    chart_filename = f'{unique_filename.split(".")[0]}.png'  
+    chart_path = os.path.join('charts', chart_filename)
+    chart_dir = os.path.dirname(chart_path)
+    print(chart_path)
+    if not os.path.exists(chart_dir):
+        os.makedirs(chart_dir)
     plt.figure(figsize=(10, 6))
     
     if chart_type == 'line':
@@ -36,11 +44,8 @@ def generate_chart(chart_type, data):
     
     plt.savefig(chart_path)
     plt.close()
+    print(f"Chart saved at: {chart_path}")
     return chart_path
-
-def HomePage(request):
-    return render(request, "index.html")
-
 
 def ChatPage(request):
     if request.method == 'POST':
@@ -53,6 +58,11 @@ def ChatPage(request):
     else:
         form = DataAnalysisForm()
     return render(request, 'chat.html', {'form': form})
+
+
+def HomePage(request):
+    return render(request, "index.html")
+
 
 
 def AboutView(request):
