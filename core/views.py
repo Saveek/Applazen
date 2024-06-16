@@ -55,18 +55,38 @@ def generate_chart(chart_type, data):
     return chart_path
 
 def ChatPage(request):
+    responses = []
+    chart_path = None
+    
     if request.method == 'POST':
         form = DataAnalysisForm(request.POST, request.FILES)
         if form.is_valid():
-            chart_type = form.cleaned_data['chart_type']
-            data = form.cleaned_data['file'] 
-            chart_path = generate_chart(chart_type, data)
-            chart_url = f'charts/{os.path.basename(chart_path)}'
-            chart_url = os.path.join(settings.STATIC_URL, 'charts', os.path.basename(chart_path))
-            return render(request, 'chat.html', {'form': form, 'chart_path': chart_url})
+            prompt = form.cleaned_data.get('prompt')
+            chart_type = form.cleaned_data.get('chart_type')
+            uploaded_file = request.FILES.get('file')
+            
+            if prompt:
+                response = openai.Completion.create(
+                    engine="text-davinci-003",
+                    prompt=prompt,
+                    max_tokens=150
+                )
+                responses.append({
+                    'prompt': prompt,
+                    'response': response.choices[0].text.strip()
+                })
+            
+            if uploaded_file:
+                chart_path = generate_chart(chart_type, file_path)
+                chart_url = os.path.join(settings.STATIC_URL, 'charts', os.path.basename(chart_path))
+                responses.append({
+                    'chart_type': chart_type,
+                    'chart_path': chart_url
+                })
     else:
         form = DataAnalysisForm()
-    return render(request, 'chat.html', {'form': form})
+    
+    return render(request, 'chat.html', {'form': form, 'responses': responses, 'chart_path': chart_path})
 
 
 def HomePage(request):
