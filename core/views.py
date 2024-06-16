@@ -3,6 +3,7 @@ import uuid
 
 import matplotlib.pyplot as plt
 import pandas as pd
+from django.conf import settings
 from django.shortcuts import redirect, render
 
 from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
@@ -13,22 +14,29 @@ CHART_DIR = os.path.join(settings.BASE_DIR, 'charts')
 
 def handle_uploaded_file(f):
     unique_filename = str(uuid.uuid4()) + '.csv'
-    file_path = os.path.join('uploaded_files', unique_filename)
+    file_path = os.path.join(UPLOAD_DIR, unique_filename)
+    
+    # Ensure the upload directory exists
+    if not os.path.exists(UPLOAD_DIR):
+        os.makedirs(UPLOAD_DIR)
+    
     with open(file_path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+    
     return file_path, unique_filename
 
 def generate_chart(chart_type, data):
     file_path, unique_filename = handle_uploaded_file(data)
     df = pd.read_csv(file_path)
     
-    chart_filename = f'{unique_filename.split(".")[0]}.png'  
-    chart_path = os.path.join('charts', chart_filename)
-    chart_dir = os.path.dirname(chart_path)
-    print(chart_path)
-    if not os.path.exists(chart_dir):
-        os.makedirs(chart_dir)
+    chart_filename = f'{unique_filename.split(".")[0]}.png'  # Use the same filename but with a different extension
+    chart_path = os.path.join(CHART_DIR, chart_filename)
+    
+    # Ensure the chart directory exists
+    if not os.path.exists(CHART_DIR):
+        os.makedirs(CHART_DIR)
+    
     plt.figure(figsize=(10, 6))
     
     if chart_type == 'line':
@@ -44,7 +52,9 @@ def generate_chart(chart_type, data):
     
     plt.savefig(chart_path)
     plt.close()
+    
     print(f"Chart saved at: {chart_path}")
+    
     return chart_path
 
 def ChatPage(request):
@@ -54,7 +64,8 @@ def ChatPage(request):
             chart_type = form.cleaned_data['chart_type']
             data = form.cleaned_data['file'] 
             chart_path = generate_chart(chart_type, data)
-            return render(request, 'chat.html', {'form': form, 'chart_path': chart_path})
+            chart_url = f'/charts/{os.path.basename(chart_path)}'
+            return render(request, 'chat.html', {'form': form, 'chart_path': chart_url})
     else:
         form = DataAnalysisForm()
     return render(request, 'chat.html', {'form': form})
