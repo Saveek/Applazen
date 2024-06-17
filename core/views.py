@@ -1,10 +1,14 @@
 import os
 import uuid
-import openai
+
 import matplotlib.pyplot as plt
+import openai
 import pandas as pd
 from django.conf import settings
 from django.shortcuts import redirect, render
+from openai import OpenAI
+
+client = OpenAI(api_key= settings.OPENAI_API_KEY)
 
 from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
 
@@ -67,7 +71,7 @@ def ChatPage(request):
             uploaded_file = request.FILES.get('file')
             
             if prompt:
-                response = openai.ChatCompletion.create(
+                response = client.chat.completions.create(
                     model="gpt-3.5-turbo",
                     messages=[
                         {"role": "system", "content": "You are a helpful assistant."},
