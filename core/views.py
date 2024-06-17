@@ -1,18 +1,17 @@
 import os
 import uuid
 
+import google.generativeai as genai
 import matplotlib.pyplot as plt
-import openai
 import pandas as pd
 from django.conf import settings
 from django.shortcuts import redirect, render
-from openai import OpenAI
 
-client = OpenAI(api_key= settings.OPENAI_API_KEY)
+genai.configure(api_key=settings.GEMINI_API_KEY)
+model = genai.GenerativeModel('gemini-1.5-flash')
+
 
 from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
-
-openai.api_key = settings.OPENAI_API_KEY
 
 UPLOAD_DIR = os.path.join(settings.STATIC_ROOT, 'uploaded_files')
 CHART_DIR = os.path.join(settings.STATIC_ROOT, 'charts')
@@ -71,17 +70,8 @@ def ChatPage(request):
             uploaded_file = request.FILES.get('file')
             
             if prompt:
-                response = client.chat.completions.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant."},
-                        {"role": "user", "content": prompt}
-                    ]
-                )
-                responses.append({
-                    'prompt': prompt,
-                    'response': response['choices'][0]['message']['content']
-                })
+                response = model.generate_content(prompt)
+
             
             if uploaded_file:
                 file_path, unique_filename = handle_uploaded_file(uploaded_file)
