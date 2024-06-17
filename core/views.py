@@ -72,10 +72,6 @@ def ChatPage(request):
             uploaded_file = request.FILES.get('file')
             chart_type = form.cleaned_data.get('chart_type')
             
-            if prompt:
-                response = model.generate_content(prompt)
-                responses.append(response.text)
-                print(responses)
             if uploaded_file:
                 file_content = uploaded_file.read().decode('utf-8')
                 system_instruction = f"You are a data analyst with over 20 years of experience. Your task is to execute the following prompt based on the given file:\n\n{file_content}"
@@ -90,6 +86,12 @@ def ChatPage(request):
                     'chart_type': chart_type,
                     'chart_path': chart_url
                 })
+            
+            if prompt:
+                response = model.generate_content(prompt)
+                responses.append(response.text)
+                print(responses)
+            
     else:
         form = DataAnalysisForm()
     
