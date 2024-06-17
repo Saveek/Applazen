@@ -69,14 +69,20 @@ def ChatPage(request):
         form = DataAnalysisForm(request.POST, request.FILES)
         if form.is_valid():
             prompt = form.cleaned_data.get('prompt')
-            chart_type = form.cleaned_data.get('chart_type')
             uploaded_file = request.FILES.get('file')
+            chart_type = form.cleaned_data.get('chart_type')
             
             if prompt:
                 response = model.generate_content(prompt)
                 responses.append(response.text)
                 print(responses)
             if uploaded_file:
+                file_content = uploaded_file.read().decode('utf-8')
+                system_instruction = f"You are a data analyst with over 20 years of experience. Your task is to execute the following prompt based on the given file:\n\n{file_content}"
+                model = genai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    system_instruction=system_instruction
+                )
                 file_path, unique_filename = handle_uploaded_file(uploaded_file)
                 chart_path = generate_chart(chart_type, file_path)
                 chart_url = os.path.join(settings.STATIC_URL, 'charts', os.path.basename(chart_path))
