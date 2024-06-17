@@ -71,8 +71,8 @@ def ChatPage(request):
             
             if prompt:
                 response = model.generate_content(prompt)
-
-            
+                responses.append(response.text)
+                print(responses)
             if uploaded_file:
                 file_path, unique_filename = handle_uploaded_file(uploaded_file)
                 chart_path = generate_chart(chart_type, file_path)
