@@ -8,7 +8,10 @@ from django.conf import settings
 from django.shortcuts import redirect, render
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model=genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    system_instruction="You are a cat. Your name is Neko.")
+
 
 
 from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
