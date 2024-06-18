@@ -19,6 +19,39 @@ from .forms import AnalysisPromptForm, DataAnalysisForm, FileUploadForm
 UPLOAD_DIR = os.path.join(settings.STATIC_ROOT, 'uploaded_files')
 CHART_DIR = os.path.join(settings.STATIC_ROOT, 'charts')
 
+def HomePage(request):
+    return render(request, "index.html")
+
+def AboutView(request):
+    return render(request, "about.html")
+
+def HomeView(request):
+    return render(request, "home.html")
+
+def AccountsView(request):
+    return render(request, "accounts.html")
+
+def BaseView(request):
+    return render(request, "base.html")
+
+def BudgetView(request):
+    return render(request, "budget.html")
+
+def FeaturesView(request):
+    return render(request, "features.html")
+
+def GoalsView(request):
+    return render(request, "goals.html")
+
+def IntelligenceView(request):
+    return render(request, "intelligence.html")
+
+def InvestmentsView(request):
+    return render(request, "investment.html")
+
+def LandingView(request):
+    return render(request, "landing1.html")
+
 def handle_uploaded_file(f):
     unique_filename = str(uuid.uuid4()) + '.csv'
     file_path = os.path.join(UPLOAD_DIR, unique_filename)
@@ -111,12 +144,3 @@ def ChatPage(request):
         form = DataAnalysisForm()
     
     return render(request, 'chat.html',context = context)
-
-def HomePage(request):
-    return render(request, "index.html")
-
-def AboutView(request):
-    return render(request, "about.html")
-
-def HomeView(request):
-    return render(request, "home.html")
