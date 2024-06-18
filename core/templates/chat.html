@@ -37,15 +37,15 @@
 <body>
     <div class="chat-container">
         <div class="chat-box">
-            {% for item in responses %}
-                {% if item.prompt %}
+            {{request.session.responses}}
+                
                     <div class="prompt">Prompt: {{ item.prompt }}</div>
                     <div class="response">Response: {{ item.response }}</div>
-                {% endif %}
-                {% if item.chart_path %}
+                
+                {% if chart_path %}
                     <div class="chart">Chart: <img src="{{ item.chart_path }}" alt="Generated Chart" /></div>
                 {% endif %}
-            {% endfor %}
+    
         </div>
         <div class="form-container">
             <form method="post" enctype="multipart/form-data">
