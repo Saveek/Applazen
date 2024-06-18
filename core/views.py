@@ -117,3 +117,6 @@ def HomePage(request):
 
 def AboutView(request):
     return render(request, "about.html")
+
+def HomeView(request):
+    return render(request, "home.html")
