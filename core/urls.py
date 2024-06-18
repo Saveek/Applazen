@@ -17,6 +17,7 @@ urlpatterns = [
     path("goals/", views.GoalsView, name="goals"),
     path("intelligence/", views.IntelligenceView, name="intelligence"),
     path("investments/", views.InvestmentsView, name="investments"),
+    path("transactions/", views.TransactionsView, name="transactions"),
     path("landing/", views.LandingView, name="landing"),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
