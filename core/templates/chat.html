@@ -43,7 +43,7 @@
                     <div class="response">Response: {{ item.response }}</div>
                 
                 {% if chart_path %}
-                    <div class="chart">Chart: <img src="{{ item.chart_path }}" alt="Generated Chart" /></div>
+                    <div class="chart">Chart: <img src="{% static '{{chart_path}}' %}" alt="Generated Chart" /></div>
                 {% endif %}
     
         </div>
