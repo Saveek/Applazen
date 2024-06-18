@@ -89,10 +89,10 @@ def ChatPage(request):
             
             if prompt:
                 response = model.generate_content(prompt)
-                responses.append(response.text)
-                print(responses)
-            
+                responses.append(response.text)   
+                request.session['responses'] = responses
     else:
+        print(responses)
         form = DataAnalysisForm()
     
     return render(request, 'chat.html', {'form': form, 'responses': responses, 'chart_path': chart_path})
