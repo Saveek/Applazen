@@ -8,6 +8,7 @@ app_name = "core"
 urlpatterns = [
     path("", views.HomePage, name="home"),
     path("chat/", views.ChatPage, name="chat"),
+    path("home/", views.ChatPage, name="home"),
     #path("about/", views.AboutView, name="about")
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
