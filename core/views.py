@@ -30,6 +30,10 @@ def handle_uploaded_file(f):
     
     return file_path, unique_filename
 
+def read_file_contents(file_path):
+    with open(file_path, 'r') as file:
+        return file.read()
+
 def generate_chart(chart_type, file_path):
     df = pd.read_csv(file_path)
     
@@ -59,7 +63,7 @@ def generate_chart(chart_type, file_path):
     return chart_path
 
 def ChatPage(request):
-    responses = []
+    responses = request.session.get('responses', [])
     chart_path = None
     
     if request.method == 'POST':
@@ -68,29 +72,37 @@ def ChatPage(request):
             prompt = form.cleaned_data.get('prompt')
             chart_type = form.cleaned_data.get('chart_type')
             uploaded_file = request.FILES.get('file')
-            uploaded_file = request.FILES.get('file')
+            
+            system_prompt = "You are a data analyst with over 20 years of experience."
             
             if prompt:
-                response = model.ut(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant."},
-                        {"role": "user", "content": prompt}
-                    ]
-                )
+                messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": prompt}
+                ]
+                
+                if uploaded_file:
+                    file_path, unique_filename = handle_uploaded_file(uploaded_file)
+                    file_contents = read_file_contents(file_path)
+                    messages.append({"role": "user", "content": f"Here is the file content: {file_contents}"})
+                    
+                    chart_path = generate_chart(chart_type, file_path)
+                    chart_url = os.path.join(settings.STATIC_URL, 'charts', os.path.basename(chart_path))
+                    responses.append({
+                        'chart_type': chart_type,
+                        'chart_path': chart_url
+                    })
+                
+                response = model.ut(messages=messages)
+                
                 responses.append({
                     'prompt': prompt,
                     'response': response['choices'][0]['message']['content']
                 })
-            
-            if uploaded_file:
-                file_path, unique_filename = handle_uploaded_file(uploaded_file)
-                chart_path = generate_chart(chart_type, file_path)
-                chart_url = os.path.join(settings.STATIC_URL, 'charts', os.path.basename(chart_path))
-                responses.append({
-                    'chart_type': chart_type,
-                    'chart_path': chart_url
-                })
+                
+                # Save responses to the session
+                request.session['responses'] = responses
+                
     else:
         form = DataAnalysisForm()
     
