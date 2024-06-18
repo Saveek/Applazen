@@ -81,27 +81,20 @@ def ChatPage(request):
                     {"role": "user", "content": prompt}
                 ]
                 
-                if uploaded_file:
+            if uploaded_file:
                     file_path, unique_filename = handle_uploaded_file(uploaded_file)
                     file_contents = read_file_contents(file_path)
                     messages.append({"role": "user", "content": f"Here is the file content: {file_contents}"})
                     
                     chart_path = generate_chart(chart_type, file_path)
                     chart_url = os.path.join(settings.STATIC_URL, 'charts', os.path.basename(chart_path))
-                    responses.append({
-                        'chart_type': chart_type,
-                        'chart_path': chart_url
-                    })
                 
-                response = model.ut(messages=messages)
-                
-                responses.append({
-                    'prompt': prompt,
-                    'response': response['choices'][0]['message']['content']
-                })
-                
-                # Save responses to the session
-                request.session['responses'] = responses
+            response = model.response(messages=messages)
+            
+            print(response)
+            
+            # Save responses to the session
+            request.session['responses'] = responses
                 
     else:
         form = DataAnalysisForm()
