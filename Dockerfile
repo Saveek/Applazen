@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the application code into the container
 COPY . .
 # Expose port 5000 for the Flask application
-EXPOSE 2118
+EXPOSE 6616
 # Start the Flask development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:2118"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:6616"]
