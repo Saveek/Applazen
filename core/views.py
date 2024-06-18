@@ -68,6 +68,7 @@ def ChatPage(request):
             prompt = form.cleaned_data.get('prompt')
             chart_type = form.cleaned_data.get('chart_type')
             uploaded_file = request.FILES.get('file')
+            uploaded_file = request.FILES.get('file')
             
             if prompt:
                 response = model.ut(
