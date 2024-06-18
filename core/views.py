@@ -86,9 +86,10 @@ def ChatPage(request):
                 print(chart_url + "I am chart url")
                 responses.append({
                     'chart_type': chart_type,
-                    'chart_path': chart_path
+                    'chart_path': chart_path,
+                    'filename': chart_path.split('/')[-1]
                 })
-            
+                
             else:
                 system_instruction = f"You are a data analyst with over 20 years of experience."
                 model = genai.GenerativeModel(
@@ -98,11 +99,18 @@ def ChatPage(request):
                 response = model.generate_content(prompt)
                 responses.append(response.text)   
                 request.session['responses'] = responses
+            context = {
+                    'chart_type': chart_type,
+                    'chart_path': chart_path,
+                    #'filename': chart_path.split('/')[-1],
+                    'form': form, 
+                    # 'responses': responses,
+                }
     else:
         print(responses)
         form = DataAnalysisForm()
     
-    return render(request, 'chat.html', {'form': form, 'responses': responses, 'chart_path': chart_path})
+    return render(request, 'chat.html',context = context)
 
 def HomePage(request):
     return render(request, "index.html")
