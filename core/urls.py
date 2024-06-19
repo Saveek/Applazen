@@ -17,8 +17,13 @@ urlpatterns = [
     path("goals/", views.GoalsView, name="goals"),
     path("intelligence/", views.IntelligenceView, name="intelligence"),
     path("investments/", views.InvestmentsView, name="investments"),
+<<<<<<< HEAD
     path("landing1/", views.LandingView, name="landing"),
     #path("landing1/", views.Transactions, name="landing"),
+=======
+    path("transactions/", views.TransactionsView, name="transactions"),
+    path("landing/", views.LandingView, name="landing"),
+>>>>>>> 75b2cb182766c76f3bf976676e6e656de31b92a5
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

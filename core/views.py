@@ -47,7 +47,10 @@ def IntelligenceView(request):
     return render(request, "intelligence.html")
 
 def InvestmentsView(request):
-    return render(request, "investment.html")
+    return render(request, "investments.html")
+
+def TransactionsView(request):
+    return render(request, "transactions.html")
 
 def LandingView(request):
     return render(request, "landing1.html")
